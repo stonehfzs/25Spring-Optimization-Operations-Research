@@ -1,0 +1,71 @@
+% Note to compile the below picture you need to use the LuaTeX compiler rather than LaTex.
+% This can by done easily in Overleaf by adjusting the engine document setting.
+
+\documentclass[multi=tikzpicture,crop]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{graphs}
+\usetikzlibrary{graphdrawing}
+\usegdlibrary{trees}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{tikzpicture}
+\graph [grow down,
+branch right=2.5cm, tree layout, level distance = 35mm, sibling distance = 55mm, nodes={rectangle,draw,rounded corners,minimum width=15mm, minimum height = 15mm, text width = 15mm,align=left}] {
+  LP1[as={LP1}\\\smallskip]
+  -> {LP2[as={LP2}\\\smallskip]
+    -> {LP4[as={LP4}\\\smallskip]
+      -> {LP8[as={LP8}\\\smallskip],
+          LP9[as={LP9}\\\smallskip]
+          -> {LP16[as={LP16}\\\smallskip],
+              LP17[as={LP17}\\\smallskip]
+              -> {LP26[as={LP26}\\\smallskip],
+                  LP27[as={LP27}\\\smallskip]
+                  -> {LP30[as={LP30}\\\smallskip],
+                      LP31[as={LP31}\\\smallskip]
+                    }
+                }
+            }
+        },
+        LP5[as={LP5}\\\smallskip]
+      -> {LP10[as={LP10}\\\smallskip]
+          -> {LP18[as={LP18}\\\smallskip],
+              LP19[as={LP19}\\\smallskip]
+              -> {LP28[as={LP28}\\\smallskip],
+                  LP29[as={LP29}\\\smallskip]
+                  -> {LP32[as={LP32}\\\smallskip],
+                      LP33[as={LP33}\\\smallskip]
+                    }
+                }
+            },
+          LP11[as={LP11}\\\smallskip]
+        -> {LP20[as={LP20}\\\smallskip],
+            LP21[as={LP21}\\\smallskip]
+          }
+        }
+    },
+    LP3[as={LP3}\\\smallskip]
+    -> {LP6[as={LP6}\\\smallskip]
+      -> {LP12[as={LP12}\\\smallskip],
+          LP13[as={LP13}\\\smallskip]
+          -> {LP22[as={LP22}\\\smallskip],
+              LP23[as={LP23}\\\smallskip]
+            }
+        },
+        LP7[as={LP7}\\\smallskip]
+      -> {LP14[as={LP14}\\\smallskip],
+          LP15[as={LP15}\\\smallskip]
+          -> {LP24[as={LP24}\\\smallskip],
+              LP25[as={LP25}\\\smallskip]
+            }
+        }  
+    }
+  }
+};
+\end{tikzpicture}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-engine: luatex
+%%% End:

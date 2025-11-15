@@ -1,0 +1,54 @@
+% Note to compile the below picture you need to use the LuaTeX compiler rather than LaTex.
+% This can by done easily in Overleaf by adjusting the engine document setting.
+
+\documentclass[multi=tikzpicture,crop]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{graphs}
+\usetikzlibrary{graphdrawing}
+\usegdlibrary{trees}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{tikzpicture}
+\graph [grow down,
+branch right=2.5cm, tree layout, level distance = 35mm, sibling distance = 55mm, nodes={rectangle,draw,rounded corners,minimum width=15mm, minimum height = 15mm, text width = 15mm,align=left}] {
+  LP1[as={LP$_1$}\\\smallskip\phantom{1}\\\phantom{2}]
+  -> {LP2[as={LP$_2$}\\\smallskip$x_2\leq 0$\\\phantom{2}]
+    -> {LP4[as={LP$_4$}\\\smallskip$x_2\leq 0$\\$x_1\leq 4$\\\phantom{2}]
+      -> {LP8[as={LP$_{8}$}\\\smallskip$x_2\leq 0$\\$x_1\leq 4$\\$x_3\leq 0$\\\phantom{2}]
+        , LP9[as={LP$_{9}$}\\\smallskip$x_2\leq 0$\\$x_1\leq 4$\\$x_3\geq 1$\\\phantom{2}]
+      }
+      , LP5[as={LP$_5$}\\\smallskip$x_2\leq 0$\\$x_1\geq 5$\\\phantom{2}]
+    }
+    , LP3[as={LP$_3$}\\\smallskip$x_2\geq 1$\\\phantom{2}]
+    -> {LP6[as={LP$_6$}\\\smallskip$x_2\geq 1$\\$x_1\leq 2$\\\phantom{2}]
+      -> {LP10[as={LP$_{10}$}\\\smallskip$x_2\geq 1$\\$x_1\leq 2$\\$x_3\leq 0$\\\phantom{2}]
+        -> {LP12[as={LP$_{12}$}\\\smallskip$x_2\geq 1$\\$x_1\leq 2$\\$x_3\leq 0$\\$x_2\leq 1$\\\phantom{2}]
+          , LP13[as={LP$_{13}$}\\\smallskip$x_2\geq 1$\\$x_1\leq 2$\\$x_3\leq 0$\\$x_2\geq 2$\\\phantom{2}]
+        }
+        , LP11[as={LP$_{11}$}\\\smallskip$x_2\geq 1$\\$x_1\leq 2$\\$x_3\geq 1$\\\phantom{2}]
+      }
+      , LP7[as={LP$_7$}\\\smallskip$x_2\geq 1$\\$x_1\geq 3$\\\phantom{2}]
+    }
+  }
+};
+\node at (LP1) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R\approx(4.06,0.61,0)$ \\ $z_R\approx 16.44$};
+\node at (LP2) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R\approx(4.67,0,0)$\\ $z_R=14$};
+\node at (LP3) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(2.5,1,0)$\\ $z_R=14.5$};
+\node at (LP6) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(2,1,0.2)$\\ $z_R=14$};
+\node at (LP7) [anchor=west,xshift=9mm,align=left]{infeasible\\fathomed};
+\node at (LP4) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(4,0,0.2)$\\ $z_R=13$};
+\node at (LP5) [anchor=west,xshift=9mm,align=left]{infeasible\\fathomed};
+\node at (LP10) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(2,1.125,0)$\\ $z_R=13.875$};
+\node at (LP11) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(0,1,1)$\\ $z_R=12$\\fathomed};
+\node at (LP8) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(4,0,0)$\\ $z_R=12$\\fathomed};
+\node at (LP9) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R\approx(1.33,0,1)$\\ $z_R=9$\\fathomed};
+\node at (LP12) [anchor=west,xshift=9mm,align=left]{$\mathbf{x}_R=(2,1,0)$\\ $z_R=13$\\fathomed};
+\node at (LP13) [anchor=west,xshift=9mm,align=left]{infeasible\\fathomed};
+\end{tikzpicture}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-engine: luatex
+%%% End:

@@ -1,0 +1,357 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{colortbl}
+\usepackage{epstopdf}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{gensymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{relsize}
+\usepackage{setspace}
+% \usepackage{subfigure} % Deprecated package
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage[colorlinks,linkcolor=blue]{hyperref}
+
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+\setlength{\parindent}{2em}
+\setlength{\baselineskip}{20pt}
+\linespread{1.5}
+\pagestyle{fancy}
+\lhead{Name: Jingyu SUN, ID: 23220003068}
+\chead{}
+\rhead{OOR Assignment 2}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+{
+    \theoremstyle{definition}
+    \newtheorem{question}{Question}
+    \newtheorem{solution}{Solution}
+}
+
+\begin{document}
+    \title{Optimization and Operations Research Assignment 2}
+    \author{Jingyu SUN}
+    \maketitle
+    \begin{question}
+        Consider the following linear program.
+        \begin{align}
+            \text{max} \quad z = 4x_1 + 3x_2 + 2x_3 + x_4,
+            \label{objective2}
+        \end{align}
+        subject to
+        \begin{align*}
+            10x_1 + 7x_2 - x_3 + x_4 \leqslant 18\\
+            3x_2 + 8x_3 - 6x_4 \leqslant 16\\
+            15x_1 - 20x_2 -40x_3 - 50x_4 \leqslant 27\\
+        \end{align*}
+        with $x_1, x_2, x_3$ and $x_4 \geqslant 0$.\par
+        (a) Solve the above linear program using Simplex.\par
+        At each step explain why a pivot has been chosen, clearly stating the mandatory and (if applicable) discretionary rules which have been applied.\par
+        When you reach the final step, clearly explain why the algorithm has stopped.\par
+        State your optimal solution (values of the variables and objective).\par
+        (b) \textbf{MATLAB Grader.} Check your answer with MATLAB Grader.\par
+    \end{question}
+
+    \begin{solution}
+        (a) We will consider solving the linear program by using second the discretionary rule that mentioned in Question 3 (b) as our discretionary rules for the pivot selection to make the process much faster for this specific program. So firstly we need to change the inequalities into equalities by introducing slack variables as follows:\par
+        \begin{center}
+            \begin{tabular}{ccccccccc}
+                10$x_1$& $+ 7x_2$& $- x_3$& $+ x_4$& $+ s_1$& = 18\\
+                & 3$x_2$& $+ 8x_3$& $- 6x_4$& $+ s_2$& = 16\\
+                15$x_1$& $- 20x_2$& $-40x_3$& $- 50x_4$& $+ s_3$& = 27\\
+            \end{tabular}
+        \end{center}
+
+        Then we could construct the Tableau for this linear program:\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & $x_3$ & $x_4$ & $s_1$ & $s_2$ & $s_3$ & $z$ & $b$ \\
+                \hline
+                10 & 7 & -1 & 1 & 1 & 0 & 0 & 0 & 18 \\
+                \hline
+                0 & 3 & 8 & -6 & 0 & 1 & 0 & 0 & 16\\
+                \hline
+                15 & -20 & -40 & -50 & 0 & 0 & 1 & 0 & 27 \\
+                \hline
+                -4& -3& -2& -1& 0& 0& 0& 1 & 0\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        \textbf{Pivot 1:}\par
+        For entering variable, the mandatory rules are that we need select the element that are negative in the last row, so $x_1$, $x_2$, $x_3$ and $x_4$ are all possible choices.\par
+        Now consider the discretionary rules, we will select the most negative element, so only $x_1$ is the choice.\par
+        For leaving variable, we need to calculate $\frac{b}{a_i}$:
+        \begin{align*}
+            \frac{18}{10} = 1.8, \frac{16}{0} = \infty, \frac{27}{15} = 1.8.
+        \end{align*}\par
+        The mandatory rules are that we always select the least positive element, so $s_1$ and $s_3$ are all possible choices.\par
+        Now consider the discretionary rules, we will select the positive element that has the least index, so $s_1$ is the choice. \par
+        Now apply the algebra methods, the tableau should be shown as follows: (In the three tableaus below, the green column represents the leaving variable and the yellow column represents the entering variable.)\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                \cellcolor{yellow}$x_1$ & $x_2$ & $x_3$ & $x_4$ & \cellcolor{green}$s_1$ & $s_2$ & $s_3$ & $z$ & $b$ \\
+                \hline
+                \cellcolor{yellow}1 & 0.7 & -0.1 & 0.1 & \cellcolor{green}0.1 & 0 & 0 & 0 & 1.8 \\
+                \hline
+                \cellcolor{yellow}0 & 3 & 8 & -6 & \cellcolor{green}0 & 1 & 0 & 0 & 16\\
+                \hline
+                \cellcolor{yellow}0 & -30.5 & -38.5 & -51.5 & \cellcolor{green}-1.5 & 0 & 1 & 0 & 0 \\
+                \hline
+                \cellcolor{yellow}0& -0.2& -2.4& -0.6& \cellcolor{green}0.4& 0& 0& 1 & 7.2\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        \textbf{Pivot 2:}\par
+        For entering variable, the mandatory rules are that we need select the element that are negative in the last row, so $x_2$, $x_3$ and $x_4$ are all possible choices.\par
+        Now consider the discretionary rules, we will select the most negative element, so only $x_3$ is the choice.\par
+        For leaving variable, we need to calculate $\frac{b}{a_i}$:
+        \begin{align*}
+            \frac{1.8}{-0.1} = -18, \frac{16}{8} = 2, \frac{0}{-38.5} = 0.
+        \end{align*}
+        The mandatory rules are that we always select the least positive element, so only $s_2$ is a possible choice.\par
+        Now since we already select the only choice for leaving variable, it is not necessary and possible to consider the discretionary rules.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & \cellcolor{yellow}$x_3$ & $x_4$ & $s_1$ & \cellcolor{green}$s_2$ & $s_3$ & $z$ & $b$ \\
+                \hline
+                1 & 0.7375 & \cellcolor{yellow}0 & 0.025 & 0.1 & \cellcolor{green}0.0125 & 0 & 0 & 2 \\
+                \hline
+                0 & 0.375 & \cellcolor{yellow}1 & -0.75 & 0 & \cellcolor{green}0.125 & 0 & 0 & 2\\
+                \hline
+                0 & -16.0625 & \cellcolor{yellow}0 & -80.375 & -1.5 & \cellcolor{green}4.8125 & 1 & 0 & 77\\
+                \hline
+                0 & 0.7& \cellcolor{yellow}0& -2.4& 0.4& \cellcolor{green}0.3 & 0& 1 & 12\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        \textbf{Pivot 3:}\par
+        For entering variable, the mandatory rules are that we need select the element that are negative in the last row, so only $x_4$ is a possible choice.\par
+        Now since we already select the only choice for entering variable, it is not necessary and possible to consider the discretionary rules.\par
+        For leaving variable, we need to calculate $\frac{b}{a_i}$:
+        \begin{align*}
+            \frac{2}{0.025} = 80, \frac{2}{-0.75} \approx -2.67, \frac{77}{-80.375} \approx -0.96.
+        \end{align*}
+        The mandatory rules are that we always select the least positive element, so only $x_2$ is a possible choice.\par
+        Now since we already select the only choice for leaving variable, it is not necessary and possible to consider the discretionary rules.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                \cellcolor{green}$x_1$ & $x_2$ & $x_3$ & \cellcolor{yellow}$x_4$ & $s_1$ & $s_2$ & $s_3$ & $z$ & $b$ \\
+                \hline
+                \cellcolor{green}40 & 29.5 & 0 & \cellcolor{yellow}1 & 4 & 0.5 & 0 & 0 & 80 \\
+                \hline
+                \cellcolor{green}30 & 22.5 & 1 & \cellcolor{yellow}0 & 3 & 0.5 & 0 & 0 & 62\\
+                \hline
+                \cellcolor{green}3215 & 2355 & 0 & \cellcolor{yellow}0 & 320 & 45 & 1 & 0 & 6507\\
+                \hline
+                \cellcolor{green}96 & 71.5 & 0& \cellcolor{yellow}0 & 10 & 1.5 & 0 & 1 & 204\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        From now since the last line are all non-negative so we could not apply mandatory rules, we should stop the algorithm.\par
+        So the optimal solution is for this linear program is $\boldsymbol{x} = (0, 0, 62, 80)$ and the optimal value is $z = 204$.\par
+    \end{solution}
+
+    \begin{question}
+        Consider the following primal linear program (P),
+        \begin{center}
+            \begin{tabular}{cccccccc}
+                (P) & max $z$ \quad = & $3x_1$ & $-$ & $x_2$ & $+$ & $x_3$\\
+                & subject to & $2x_1$ & $-$ & $5x_2$ & $+$ & $2x_3$ &$\leqslant 8$\\
+                & & $5x_1$ & $+$ & $4x_2$ & $-$ & $x_3$ &$\leqslant 14$\\
+                & & $x_i \geqslant 0$, & & $x = 1,2$ & & &\\
+            \end{tabular}
+        \end{center}
+
+        (a) State the dual problem (D) of (P). As usual, your should include the objective and all constraints.\par
+        (b) Find the complementary slackness relations for the above primal problem (P).\par
+        (c) You are given that (P) has the optimal solution
+        \begin{align*}
+            x^{*}_1 = 0, x^{*}_2 = 12, x^{*}_3 = 34.
+        \end{align*}
+
+        Use this optimal solution and the complementary slackness relations from Question 2(b) to find the optimal solution of the dual (D).\par
+    \end{question}
+
+    \begin{solution}
+        (a) Consider the dual problem, we should have two variables $y_1$ and $y_2$ with the following objectives and constrains:\par
+        \begin{center}
+            \begin{tabular}{cccccc}
+                (D) & min $w$ \quad = & $8y_1$ & $+$ & $12y_2$ \\
+                & subject to & $2y_1$ & $+$ & $5y_2$ & $\geqslant 3$\\
+                & & $-5y_1$ & $+$ & $4y_2$ & $\geqslant -1$\\
+                & & $2y_1$ & $-$ & $y_2$ & $\geqslant 1$\\
+                & & $y_i \geqslant 0$, & &  $i = 1,2$ & \\
+            \end{tabular}
+        \end{center}
+
+        (b) Now consider the complementary slackness relations for the primal problem (P), we will have the primal conditions:
+        \begin{align*}
+            x_1 \cdot (2y_1 + 5y_2 - 3) = 0,\\
+            x_2 \cdot (-5y_1 + 4y_2 + 1) = 0,\\
+            x_3 \cdot (2y_1 - y_2 - 1) = 0.
+        \end{align*}
+
+        And the dual conditions:
+        \begin{align*}
+            y_1 \cdot (2x_1 - 5x_2 + 2x_3 - 8) = 0,\\
+            y_2 \cdot (5x_1 + 4x_2 - x_3 - 14) = 0.
+        \end{align*}
+
+        (c) By substituting the given optimal solution $x^{*}_1 = 0, x^{*}_2 = 12, x^{*}_3 = 34$ into our complementary slackness relations, we have that:
+        \begin{align*}
+            0 \cdot (2y_1 + 5y_2 - 3) = 0,\\
+            12 \cdot (-5y_1 + 4y_2 + 1) = 0,\\
+            34 \cdot (2y_1 - y_2 - 1) = 0,\\
+            y_1 \cdot 0 = 0,\\
+            y_2 \cdot 0 = 0.
+        \end{align*}
+
+        Since the first and last two equations are already equal when $y_1$ and $y_2$ are at any values, so we only could use the other two equations to slove the value for $y_1$ and $y_2$, and they actually could be represented as follows:
+        \begin{align*}
+            -5y_1 + 4y_2 + 1 = 0,\\
+            2y_1 - y_2 - 1 = 0.
+        \end{align*}
+
+        Substitute the second equation into the first equation, we have that $3y_1-3=0$, so $y_1=1$.\par
+        And then we could have that $y_2=1$.\par
+        Now check that the solution of the dual problem (D) actually having the same objective value as the primal problem:
+        \begin{align*}
+            z(0,12,34) = 3 \cdot 0 - 12 + 34 = 22,\\
+            w(1,1) = 8 \cdot 1 + 12 \cdot 1 = 20,
+        \end{align*}
+        we state that the optimal solution of the dual is $y_1 = 1$ and $y_2 = 1$, and the optimal value is $w = 8y_1 + 12y_2 = 8 + 12 = 20$.\par
+    \end{solution}
+
+    \begin{question}
+        Consider the following linear problem
+        \begin{center}
+            \begin{tabular}{cccccccc}
+                & max $z$ \quad = & $4x_1$ & $+$ & $2x_2$ & $+$ & $x_3$ \\
+                & subject to & & & & & $x_1$ & $\leqslant 5$  \\
+                & & & & $4x_1$ & $+$ & $x_2$ & $\leqslant 25$\\
+                & & $8x_1$ & $+$ & $4x_2$ & $+$ & $x_3$ & $\leqslant 125$\\
+                & & $x_i \geqslant 0$, & &  $i = 1,2,3$ & \\
+            \end{tabular}
+        \end{center}
+
+        This is an example of Klee-Minty problems, which is a class of linear programs often used to test the performance of algorithms.\par
+        (a) Solve the above problem using Simplex with Bland’s rules for column/row choice. In addition to the usual mandatory rules, these rules are:\par
+        \begin{itemize}
+            \item column choice: if more than one $-c_j < 0$ choose the option with smallest $j$.
+            \item row choice: if more than one row has equal smallest $b_i /a_{ij}$ , choose the row with smallest $i$.
+        \end{itemize}
+
+        In your submission, rather than writing out each tableau, record the following information about each step:\par
+        \begin{itemize}
+            \item The choice of pivot location $(i, j)$
+            \item The value of the objective
+            \item The value of the variables $(x1, x2, x3)$
+            \item The non-basic variables.
+        \end{itemize}
+
+        A table or list would be an appropriate way to present this information.\par
+        (b) Now solve the problem again, but this time with different discretionary rules. In addition to the usual mandatory rules apply the following\par
+        \begin{itemize}
+            \item column choice: if more than one $-c_j < 0$ choose the minimum value of $-c_j$ (the most strongly negative). Where two values are equal, choose the option with the smallest $j$.
+            \item row choice: if more than one row has equal smallest $b_i /a_{ij}$ , choose the row with largest $a_{ij}$ . Where two values are equal, choose the option with the smallest $i$.    
+        \end{itemize}
+
+        (c) Visualise the trajectories of the solutions from Questions 3(a) and 3(b). To do this make a 3D plot of the $(x1, x2, x3)$ co-ordinates of each step of the Simplex.\par
+        (d) Briefly discuss how Simplex proceeds with the different discretionary choice rules from Question 3(a) and 3(b). Refer to your plots from Question 3(c) as part of your answer.\par
+    \end{question}
+
+    \begin{solution}
+        (a) To use the Simplex Algorithm by using Bland's rule, we firtly will change the program into the tableau.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $z$ & $b$ \\
+                \hline
+                1 & 0 & 0 & 1 & 0 & 0 & 0 & 5 \\
+                \hline
+                4 & 1 & 0 & 0 & 1 & 0 & 0 & 25\\
+                \hline
+                8 & 4 & 1 & 0 & 0 & 1 & 0 & 125 \\
+                \hline
+                -4 & -2 & -1 & 0 & 0 & 0 & 1 & 0 \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        Now consider using Bland's rule, we will just record the information rather than write down each tableau. Below are the iteration informations:\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                Iterations & Pivot Location $(i,j)$ & Value of Objective & Value of $(x_1,x_2,x_3)$ & Non-basic Variables \\
+                \hline
+                1 & (1,1) & 20 & (5,0,0) & $x_2,x_3,s_1$ \\
+                \hline
+                2 & (2,2) & 30 & (5,5,0) & $x_3,s_1,s_2$ \\
+                \hline
+                3 & (3,3) & 95 & (5,5,65) & $s_1,s_2,s_3$ \\
+                \hline
+                4 & (2,5) & 105 & (5,0,85) & $x_2,s_1,s_3$ \\
+                \hline
+                5 & (1,4) & 125 & (0,0,125) & $x_1,x_2,s_3$ \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        (b) Using another discretionary rules, the iteration informations are below:\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                Iterations & Pivot Location $(i,j)$ & Value of Objective & Value of $(x_1,x_2,x_3)$ & Non-basic Variables \\
+                \hline
+                1 & (1,1) & 20 & (5,0,0) & $x_2,x_3,s_1$ \\
+                \hline
+                2 & (2,2) & 30 & (5,5,0) & $x_3,s_1,s_2$ \\
+                \hline
+                3 & (1,4) & 50 & (0,25,0) & $x_1,x_3,s_2$ \\
+                \hline
+                4 & (3,3) & 75 & (0,25,25) & $x_1,s_2,s_3$ \\
+                \hline
+                5 & (1,1) & 95 & (5,5,65) & $s_1,s_2,s_3$ \\
+                \hline
+                6 & (2,5) & 105 & (5,0,85) & $x_2,s_1,s_3$ \\
+                \hline
+                7 & (1,4) & 125 & (0,0,125) & $x_1,x_2,s_3$ \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        When applying these discretionary rules, it could be concluded that the algorithm will have more iterations than the previous one.\par
+        (c) Using \texttt{plot3}, we could plot the following 3D plot to show the trajectories of the solutions from Questions 3(a) and 3(b).\par
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Trajectories Comparison.png}
+            \caption{Trajectories Comparison}
+            \label{fig:Trajectories Comparison}
+        \end{figure}
+
+        Also compared with the plot here that illusrates the feasible region:\par
+        \begin{figure}[h!]
+            \centering
+            \includegraphics[width=0.8\textwidth]{Trajectories Comparison2.png}
+            \caption{Trajectories Comparison With Feasible Region}
+            \label{fig:Trajectories Comparison2}
+        \end{figure}
+        (d) Consider two rules we used above, the fisrt method actually has less iterations, which shows that this rule here is more efficient to solve the problem.\par
+        And from Figure~\ref{fig:Trajectories Comparison} and Figure~\ref{fig:Trajectories Comparison2}, we could see that the first method has a more direct path to the optimal solution, while the second method has two more vertices to get the optimal solution.\par
+    \end{solution}
+\end{document}

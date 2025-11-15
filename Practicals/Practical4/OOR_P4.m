@@ -1,0 +1,43 @@
+load('Prac4_au_cn_tsp.mat')
+[route_bf,route_length_bf]=tsp_brute_force(au_distances);
+
+n_max = 11;
+bf_times = nan(n_max,1);
+for j=2:n_max
+    tic
+    tsp_brute_force(cn_distances(1:j,1:j));
+    bf_times(j) = toc;
+end
+
+route_lengths_greedy_cn=nan(1,100);
+route_greedy_cn=nan(100);
+for j=1:100
+    [route_greedy_cn(j,:),route_lengths_greedy_cn(j)] = tsp_greedy(cn_distances,j);
+end
+
+greedy_routes_cn=nan(100);
+
+rng(20325)
+n_population = 32;
+n_generations = 10000;
+n_elite = 20;
+n_greedy_initial = 14;
+initial_routes = route_greedy_cn(randi(100,[n_greedy_initial 1]),:);
+[route_GA_cn,route_length_GA_cn] = tsp_genetic_algorithm(cn_distances, ...
+n_population,n_generations,n_elite,initial_routes);
+
+
+rng(1)
+n_population = 32;
+n_generations = 5000;
+n_elite = 20;
+n_greedy_initial = 14;
+initial_routes = route_greedy_cn(randi(100,[n_greedy_initial 1]),:);
+[route_GA_cn,route_length_GA_cn] = tsp_genetic_algorithm(cn_distances, ...
+n_population,n_generations,n_elite,initial_routes);
+
+
+subplot(1,2,1)
+plot_route_cn(route_greedy_cn,cn)
+subplot(1,2,2)
+plot_route_cn(route_GA_cn,cn)

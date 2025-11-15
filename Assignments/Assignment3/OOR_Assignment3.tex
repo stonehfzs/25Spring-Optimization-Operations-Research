@@ -1,0 +1,244 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{colortbl}
+\usepackage{epstopdf}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{gensymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{relsize}
+\usepackage{setspace}
+% \usepackage{subfigure} % Deprecated package
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage[colorlinks,linkcolor=blue]{hyperref}
+
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+\setlength{\parindent}{2em}
+\setlength{\baselineskip}{20pt}
+\linespread{1.5}
+\pagestyle{fancy}
+\lhead{Name: Jingyu SUN, ID: 23220003068}
+\chead{}
+\rhead{OOR Assignment 3}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+{
+    \theoremstyle{definition}
+    \newtheorem{question}{Question}
+    \newtheorem{solution}{Solution}
+}
+
+\begin{document}
+    \title{Optimization and Operations Research Assignment 2}
+    \author{Jingyu SUN}
+    \maketitle
+    \begin{question}
+        Recall from the course notes that the knapsack problem involves choosing which items to put in a knapsack (or backpack). Each item has value, but you have a limited volume in the pack.\par
+        Consider the following linear program representing a knapsack problem for six items with total value z and maximum volume 35.\par
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                max & $z$ = & $19x_1$ & $+$ & $22x_2$ & $+$ & $30x_3$ & $+$ & $37x_4$ & $+$ & $11x_5$ & $+$ & $42x_6$ \\
+                & s.t. & $7x_1$ & $+$ & $6x_2$ & $+$ & $11x_3$ & $+$ & $13x_4$ & $+$ & $4x_5$ & $+$ & $13x_6$ & $\leqslant35$ \\
+            \end{tabular}
+        \end{center}
+        with $x_i = 0, 1$, for $i = 1, \cdots , 6$.\par
+        (a) Relax the integral constraint to $x_i \geqslant 0$ (and real). Solve the relaxed version of the linear program either by inspection or with MATLAB.\par
+        (b) Relax the integral constraint to $0 \leqslant x_i \leqslant 1$ (and real). Solve the relaxed problem with MATLAB and submit via MATLAB Grader. You do not need to include your code.\par
+        (c) Now solve the true binary integer linear program with MATLAB and submit via MATLAB Grader. You do not need to include your code.\par
+        (d) State the solutions (variables and objectives) you found in 1(b) and 1(c). Comment on the relative size of the objective function for each solution from 1(a)-(c), and discuss why you would expect the value of the objective to change as it does.\par
+        (e) Now apply the greedy algorithm from the course notes to the problem. You should do this by hand, rather than in MATLAB, and include all working in your submission. How does the greedy solution compare to the optimal solution?\par
+    \end{question}
+        
+    \begin{solution}
+        (a) For the first relaxed version, we will solve the question by hand to show the process.\par
+        To begin with, we will construct a tableau:\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $s_1$ & $z$ & $b$ \\
+                \hline
+                7 & 6 & 11 & 13 & 4 & 13 & 1 & 0 & 35\\
+                \hline
+                -19 & -22 & -30 & -37 & -11 & -42 & 0 & 1 & 0\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        Then we will choose the pivot to be $(1,1)$, which make the tableau like this:\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $s_1$ & $z$ & $b$ \\
+                \hline
+                1 & $\frac{6}{7}$ & $\frac{11}{7}$ & $\frac{13}{7}$ & $\frac{4}{7}$ & $\frac{13}{7}$ & $\frac{1}{7}$ & 0 & 5\\
+                \hline
+                0 & $-\frac{40}{7}$ & $-\frac{1}{7}$ & $-\frac{12}{7}$ & $-\frac{1}{7}$ & $-\frac{47}{7}$ & $\frac{19}{7}$ & 1 & 95\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        Still similar, we will choose the pivot to be $(1,2)$, and the Simplex method stops since it has already found the optimal solution.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+                \hline
+                $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ & $s_1$ & $z$ & $b$ \\
+                \hline
+                $\frac{7}{6}$ & 1 & $\frac{11}{6}$ & $\frac{13}{6}$ & $\frac{2}{3}$ & $\frac{13}{6}$ & $\frac{1}{6}$ & 0 & $\frac{35}{6}$\\
+                \hline
+                $\frac{20}{3}$ & 0 & $\frac{31}{3}$ & $\frac{32}{3}$ & $\frac{11}{3}$ & $\frac{17}{3}$ & $\frac{11}{3}$ & 1 & $\frac{385}{3}$\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        So here the optimal value for this relaxed version problem is $\frac{385}{3}$, and the optimal solution is $(0,\frac{35}{6},0,0,0,0)$.\par
+        (d) Similarly, we find the optimal value for the second relaxed version and the actual integer linear program.\par
+        So we have the following statements:\par
+
+        \begin{enumerate}
+            \item The optimal solution of the (b) is $(0,1,0,1,0.75,1)$, and the optimal value is 109.25.\par
+            \item The optimal solution of the (c) is $(0,1,1,0,1,1)$, and the optimal value is 105.\par
+        \end{enumerate}
+
+        (e) To find the solution by using greedy algorithm, we will construct the table to calculate the ratio of each item, and find out the solution.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+                \hline
+                Items & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ & $x_6$ \\
+                \hline
+                Value & 19 & 22 & 30 & 37 & 11 & 42 \\
+                \hline
+                Weight & 7 & 6 & 11 & 13 & 4 & 13 \\
+                \hline
+                Ratio & 2.714 & 3.667 & 2.727 & 2.846 & 2.750 & 3.231\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        And to present the steps we use to find the optimal solution, we will construct a tableau similar to Assignment 2 to show that.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+                \hline
+                Iterations & Current Weight & Current Value & Current Items\\
+                \hline
+                1 & 6 & 22 & $x_2$\\
+                \hline
+                2 & 19 & 64 & $x_2$, $x_6$\\
+                \hline
+                3 & 32 & 101 & $x_2$, $x_6$, $x_4$\\
+                \hline
+                4 & 32 & 101 & $x_2$, $x_6$, $x_4$\\
+                \hline
+                5 & 32 & 101 & $x_2$, $x_6$, $x_4$\\
+                \hline
+                6 & 32 & 101 & $x_2$, $x_6$, $x_4$\\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        We find that from iteration 3, the weight would not be much higher since any items could not be less than the remaining weight.\par
+        So the optimal solution for the greedy algorithm is $(0,1,0,1,0,1)$, and the value is 101.\par
+        Now compared with the previous solution by using MATLAB, we can see that the greedy algorithm is not optimal, this also indicates that the greedy algorithm would not always find the optimal solution.\par
+    \end{solution}
+
+    \begin{question}
+        Apply a greedy heuristic from the course notes to find the shortest routes from the Haide College building (location 1) to the other 10 marked locations. Include all working in your submission.\par
+        As part of your submission include a table showing the shortest route to each destination and the length of the route. (Hint: A similar table is given in the solution for Tutorial 4, Question 3).\par
+    \end{question}
+
+    \begin{solution}
+        The greedy heuristic algorithm that applied in finding the shortest path is called Dijkstra's algorithm. We will also apply this  by showing the iteration information. Below we ignore the unit and consider it as meters defaultly.\par
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+                \hline
+                Iterations & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11\\
+                \hline
+                Distance(1,1) & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+                \hline
+                Distance(1,2) & $\infty$ & 160 & 160 & 160 & 160 & 160 & 160 & 160 & 160 & 160 & 160 \\
+                \hline
+                Distance(1,3) & $\infty$ & $\infty$ & 560 & 560 & 560 & 560 & 560 & 560 & 560 & 560 & 560 \\
+                \hline
+                Distance(1,4) & $\infty$ & $\infty$ & 630 & 630 & 630 & 630 & 630 & 630 & 630 & 630 & 630 \\
+                \hline
+                Distance(1,5) & $\infty$ & $\infty$ & 510 & 510 & 510 & 510 & 510 & 510 & 510 & 510 & 510 \\
+                \hline
+                Distance(1,6) & $\infty$ & 590 & 590 & 580 & 580 & 580 & 580 & 580 & 580 & 580 & 580 \\
+                \hline
+                Distance(1,7) & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & 620 & 620 & 620 & 620 & 620 & 620 \\
+                \hline
+                Distance(1,8) & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & 770 & 770 & 770 & 770 & 770 \\
+                \hline
+                Distance(1,9) & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & 940 & 940 & 940 & 940 \\
+                \hline
+                Distance(1,10) & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & 1030 & 1030 & 1030 & 1030 \\
+                \hline
+                Distance(1,11) & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$ & 910 & 910 & 910 & 910 & 910 \\ 
+                \hline
+            \end{tabular}
+        \end{center}
+
+        Here we also exaplain each iteration's meanings: (To make the algorithm complete we also consider the path from location 1 to location 1 since it is not important here.)\par
+        \textbf{Iteration 1:} Initially we will start from location 1.\par
+        The distance from location 1 to location 2 is 160, which is less than $\infty$, so we will set it as 160.\par
+        The distance from location 1 to location 6 is 590, which is less than $\infty$, so we will set it as 590.\par
+
+        \textbf{Iteration 2:} From Iteration 1 we will select location 2 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 3 is 560, which is less than $\infty$, so we will set it as 560.\par
+        The distance from location 1 to location 5 is 510, which is less than $\infty$, so we will set it as 510.\par
+
+        \textbf{Iteration 3:} From Iteration 2 we will select location 5 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 4 is 630, which is less than $\infty$, so we will set it as 630.\par
+        The distance from location 1 to location 6 is 580, which is less than 590, so we will set it as 580.\par
+
+        \textbf{Iteration 4:} From Iteration 3 we will select location 3 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 4 is 840, which is higher than 630, so we would not change it.\par
+
+        \textbf{Iteration 5:} From Iteration 4 we will select location 6 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 7 is 620, which is less than $\infty$, so we will set it as 620.\par
+
+        \textbf{Iteration 6:} From Iteration 5 we will select location 7 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 8 is 770, which is less than $\infty$, so we will set it as 770.\par
+        The distance from location 1 to location 11 is 910, which is less than $\infty$, so we will set it as 910.\par
+
+        \textbf{Iteration 7:} From Iteration 6 we will select location 4 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 5 is already the shortest, so we would not change it.\par
+        The distance from location 1 to location 8 is 820, which is higher than 770, so we would not change it.\par
+
+        \textbf{Iteration 8:} From Iteration 7 we will select location 8 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 9 is 940, which is less than $\infty$, so we will set it as 770.\par
+        The distance from location 1 to location 10 is 1030, which is less than $\infty$, so we will set it as 910.\par
+
+        \textbf{Iteration 9:} From Iteration 8 we will select location 11 as the next location since the distance is the shortest.\par
+        There is no path from location 11 to other locations, so we would not change anything at this iteration.\par
+
+        \textbf{Iteration 10:} From Iteration 9 we will select location 9 as the next location since the distance is the shortest.\par
+        The distance from location 1 to location 10 is 1160, which is higher than 1030, so we would not change it.\par
+        The distance from location 1 to location 11 is already the shortest, so we would not change it.\par
+
+        \textbf{Iteration 11:} From Iteration 10 we will select location 10 as the next location since the distance is the shortest.\par
+        And then the algorithm stops since all the locations have been visited.\par
+
+        So we have the following table to show the shortest path from location 1 to other locations:\par
+        
+        \begin{enumerate}
+            \item The shortest path from location 1 to location 1 is 0.\par
+            \item The shortest path from location 1 to location 2 is 160.\par
+            \item The shortest path from location 1 to location 3 is 560.\par
+            \item The shortest path from location 1 to location 4 is 630.\par
+            \item The shortest path from location 1 to location 5 is 510.\par
+            \item The shortest path from location 1 to location 6 is 580.\par
+            \item The shortest path from location 1 to location 7 is 620.\par
+            \item The shortest path from location 1 to location 8 is 770.\par
+            \item The shortest path from location 1 to location 9 is 940.\par
+            \item The shortest path from location 1 to location 10 is 1030.\par
+            \item The shortest path from location 1 to location 11 is 910.\par
+        \end{enumerate}
+    \end{solution}
+\end{document}

@@ -1,0 +1,344 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{colortbl}
+\usepackage{epstopdf}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{gensymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{relsize}
+\usepackage{setspace}
+% \usepackage{subfigure} % Deprecated package
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage[colorlinks,linkcolor=blue]{hyperref}
+
+\usepackage{longtable}
+\usepackage{tabularx}
+
+\geometry{a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm}
+\setlength{\parindent}{2em}
+\setlength{\baselineskip}{20pt}
+\linespread{1.5}
+\pagestyle{fancy}
+\lhead{Name: Jingyu SUN, ID: 23220003068}
+\chead{}
+\rhead{OOR Assignment 4}
+\lfoot{}
+\cfoot{}
+\rfoot{\thepage}
+{
+    \theoremstyle{definition}
+    \newtheorem{question}{Question}
+    \newtheorem{solution}{Solution}
+}
+
+\begin{document}
+    \title{Optimization and Operations Research Assignment 4}
+    \author{Jingyu SUN}
+    \maketitle
+    \begin{question}
+        Solve the following problem using Branch and Bound.\par
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+            \end{tabular}
+        \end{center}
+        with $x_i$ are positive integers, $i = 1, 2, 3$.\par
+        (a) Draw a tree diagram using the branching strategy described in the course notes.\par
+        (b) Include documented MATLAB code to solve each relaxed LP.\par
+        (c) For each fathomed nodes of the tree clearly explain why the node is fathomed. Present this information as a list of fathomed nodes, along with the reason they are fathomed.\par
+        (d) State the optimal solution to the ILP.\par
+    \end{question}
+
+    \begin{solution}
+        To complete this problem, we will first go over all the steps, then finish each step's details.\par
+        The fisrt relaxed LP (namely LP1) is the original problem without the integer constraints, it has the following solution:\par
+        $\mathbf{x}_R\approx(4.06,0.61,0)$, $z_R\approx 16.44$.\par
+        So the branched integer is 0.61. Then we have two LPs, namely LP2 and LP3.\par
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP2 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $x_2$  &     &         & $\leqslant 0$\\
+            \end{tabular}
+        \end{center}
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP3 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $-x_2$  &     &         & $\leqslant -1$\\
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP2 and LP3, and get the following results:\par
+        LP2: $\mathbf{x}_R\approx(4.67,0,0)$, $z_R=14$.\par
+        LP3: $\mathbf{x}_R=(2.5,1,0)$, $z_R=14.5$.\par
+        
+        Similarly, we would branch LP2 and LP3 with LP2 first.\par
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP4 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$x_2$  &     &         &$\leqslant 0$\\
+                & & $x_1$  &     &        &     &          &$\leqslant 4$\\
+            \end{tabular}
+        \end{center}
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP5 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$x_2$  &     &         &$\leqslant 0$\\
+                & & $-x_1$  &     &        &     &          &$\leqslant -5$\\
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP4 and LP5, and get the following results:\par
+        LP4: $\mathbf{x}_R=(4,0,0.2)$, $z_R=13$.\par
+        LP5: infeasible.\par
+
+        For LP3, the branched problem is LP6 and LP7 with the following solutions.\par
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP6 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $-x_2$ &     &         & $\leqslant -1$\\
+                & & $x_1$ &     &        &     &         &$\leqslant 2$
+            \end{tabular}
+        \end{center}
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP7 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $-x_2$ &     &         & $\leqslant -1$\\
+                & & $-x_1$ &     &        &     &         &$\leqslant -3$
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP6 and LP7, and get the following results:\par
+        LP6: $\mathbf{x}_R=(2,1,0.2)$, $z_R=14$.\par
+        LP7: infeasible.\par
+
+        Since LP5 and LP7 are infeasible, thus fathomed. Now consider the left two LPs, we would choose LP4 to branch first.\par
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP8 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $x_2$ &     &         & $\leqslant 0$\\
+                & & $x_1$ &     &        &     &         &$\leqslant 4$\\
+                & &       &     &        & $x_3$ &         &$\leqslant 0$\\
+            \end{tabular}
+        \end{center}
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP9 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     & $x_2$ &     &         & $\leqslant 0$\\
+                & & $x_1$ &     &        &     &         &$\leqslant 4$\\
+                & &       &     &        & $-x_3$ &         &$\leqslant -1$\\
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP8 and LP9, and get the following results:\par
+        LP8: $\mathbf{x}_R=(4,0,0)$, $z_R=12$.\par
+        LP9: $\mathbf{x}_R=(1.33,0,1)$, $z_R=9$.\par
+
+        Now consider LP6 to branch.\par
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP10 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$-x_2$  &     &         &$\leqslant -1$\\
+                & & $x_1$  &     &        &     &          &$\leqslant 2$\\
+                & &       &     &        & $x_3$ &         &$\leqslant 0$\\
+            \end{tabular}
+        \end{center}
+
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP11 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$-x_2$  &     &         &$\leqslant -1$\\
+                & & $x_1$  &     &        &     &          &$\leqslant 2$\\
+                & &       &     &        & $-x_3$ &         &$\leqslant -1$\\
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP10 and LP11, and get the following results:\par
+        LP10: $\mathbf{x}_R=(2,1.125,0)$, $z_R=13.875$.\par
+        LP11: $\mathbf{x}_R\approx(0,1,1)$, $z_R=12$.\par
+
+        Now consider LP10 to branch since $x_2$ is still not an integer.\par
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP12 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$-x_2$  &     &         &$\leqslant -1$\\
+                & & $x_1$  &     &        &     &          &$\leqslant 2$\\
+                & &       &     &        & $x_3$ &         &$\leqslant 0$\\
+                & &       &     & $x_2$ &       &         &$\leqslant 1$\\
+            \end{tabular}
+        \end{center}
+
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                LP13 & max & $z$ = & $3x_1$ & $+$ & $7x_2$ & $+$ & $5x_3$ \\
+                & s.t. & $2x_1$ & $+$ & $5x_2$ & $+$ & $4x_3$ & $\leqslant 20$ \\
+                & & $2x_1$ & $+$ & $8x_2$ & $+$ & $5x_3$ & $\leqslant 13$ \\
+                & & $3x_1$ & $+$ & $3x_2$ & $+$ & $10x_3$ & $\leqslant 14$ \\
+                & &        &     &$-x_2$  &     &         &$\leqslant -1$\\
+                & & $x_1$  &     &        &     &          &$\leqslant 2$\\
+                & &       &     &        & $x_3$ &         &$\leqslant 0$\\
+                & &       &     & $-x_2$ &       &         &$\leqslant -2$\\
+            \end{tabular}
+        \end{center}
+
+        Then we solve LP12 and LP13, and get the following results:\par
+        LP12: $\mathbf{x}_R=(2,1,0)$, $z_R=13$.\par
+        LP13: infeasible.\par
+
+        So here we have finished all the LPs, and we can see that the optimal solution is LP12.\par
+        (a) The tree diagram is shown in the following figure.\par
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.8\textwidth]{OOR_A4_tree_1.pdf}
+            \caption{Question 1 Branch and Bound Tree Diagram}
+            \label{fig:tree_diagram_1}
+        \end{figure}
+
+        (b) Here are the MATLAB codes for each LP.\par
+        \VerbatimInput[frame=single]{OOR_A4_LP.m}
+
+        (c) The list of fathomed nodes is as follows:\par
+        \begin{center}
+            \begin{tabular}{c|c}
+                Node & Reason \\
+                \hline
+                LP5 & After adding the constraint, the LP is infeasible. \\
+                LP7 & After adding the constraint, the LP is infeasible. \\
+                LP8 & After adding the constraint, the LP has an integer feasible solution. \\
+                LP9 & After adding the constraint, the LP has a solution that is bounded by LP8. \\
+                LP11 & After adding the constraint, the LP has an integer feasible solution. \\
+                LP12 & After adding the constraint, the LP has an integer feasible solution. \\
+                LP13 & After adding the constraint, the LP is infeasible. \\
+            \end{tabular}
+        \end{center}
+
+        (d) The optimal solution to the ILP is $\mathbf{x}_R=(2,1,0)$ with the optimal value $z_R=13$.\par
+
+    \end{solution}
+
+    \begin{question}
+        Consider the following linear program representing a knapsack problem for six items with total value $z$ and maximum volume 35.
+        \begin{center}
+            \begin{tabular}{ccccccccccccccc}
+                max & $z$ = & $19x_1$ & $+$ & $22x_2$ & $+$ & $30x_3$ & $+$ & $37x_4$ & $+$ & $11x_5$ & $+$ & $42x_6$ \\
+                & s.t. & $7x_1$ & $+$ & $6x_2$ & $+$ & $11x_3$ & $+$ & $13x_4$ & $+$ & $4x_5$ & $+$ & $13x_6$ & $\leqslant 35$ \\
+            \end{tabular}
+        \end{center}
+        with $x_i = 0, 1$, for $i = 1, \cdots , 6$.
+
+        (a) Relax the integral constraints (to give the constraint that all the $x_i$ are $0 \leqslant x_i \leqslant 1$) and solve the above problem using the problem based approach in MATLAB. Upload your code to MATLAB Grader for checking, you do not need to include it in your PDF submission.\par
+        (b) Find the optimal solution to the problem using the branch and bound as described in the course notes.\par
+        Since the tree for this problem is a large, so you should draw this diagram to show only the structure of the tree and the labels of the problems.\par
+        The detail of the relaxed problems and branching should then be provided in a table like the one below. Make sure you include reasons for fathoming.\par
+        It is not required that you submit any MATLAB code for this question, you just need to summarise results in your table.\par
+        (c) Finally, briefly comment on how effective branch and bound was for this problem. For example, would a brute force search have been more efficient?\par
+    \end{question}
+
+    \begin{solution}
+        (b) The tree diagram is shown in the following figure.\par
+        \begin{figure}[h]
+            \centering
+            \includegraphics[width=0.8\textwidth]{OOR_A4_tree_2.pdf}
+            \caption{Question 2 Branch and Bound Tree Diagram}
+            \label{fig:tree_diagram_2}
+        \end{figure}
+        And here is the table summarising the information for all relaxed problems and branching status.\par
+        \begin{center}
+            \setlength\tabcolsep{3pt}
+            \begin{longtable}{>{\centering\arraybackslash}p{0.45cm}|>{\centering\arraybackslash}p{1.05cm}|>{\centering\arraybackslash}p{2.6cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{2.7cm}|>{\centering\arraybackslash}p{2.5cm}|>{\centering\arraybackslash}p{2.7cm}}
+                IP & Parent & New Constraints & $z_R$ & $x_R$ & Status & Reason \\
+                \hline
+                \endfirsthead
+                IP & Parent & New Constraints & $z_R$ & $x_R$ & Status & Reason \\
+                \hline
+                \endhead
+                1 & - & - & 109.2500 & (0,1,0,1,0.7500,1) & Branched & - \\	
+                2 & 1 & $x_5 \leqslant 0$ & 109.1818 & (0,1,0.2727,1,0,1) & Branched & - \\
+                3 & 1 & $x_5 \geqslant 1$ & 109.1538 & (0,1,0,0.9231,1,1) & Branched & - \\
+                4 & 2 & $x_3 \leqslant 0$ & 109.1429 & (0.4286,1,0,1,0,1) & Branched & - \\
+                5 & 2 & $x_3 \geqslant 1$ & 108.2308 & (0,1,1,0.3846,0,1) & Branched & - \\
+                6 & 3 & $x_4 \leqslant 0$ & 107.7143 & (0.1429,1,1,0,1,1) & Branched & - \\
+                7 & 3 & $x_4 \geqslant 1$ & 108.7692 & (0,1,0,1,1,0.9231) & Branched & - \\
+                8 & 4 & $x_1 \leqslant 0$ & 101 & (0,1,0,1,0,1) & Fathomed & Integral Feasible \\
+                9 & 4 & $x_1 \geqslant 1$ & 108.6154 & (1,1,0,0.6923,0,1) & Branched & - \\
+                10 & 5 & $x_4 \leqslant 0$ & 107.5714 & (0.7143,1,1,0,0,1) & Branched & - \\
+                11 & 5 & $x_4 \geqslant 1$ & 105.1538 & (0,1,1,1,0,0.3846) & Branched & - \\
+                12 & 6 & $x_1 \leqslant 0$ & 105 & (0,1,1,0,1,1) & Fathomed & Integral Feasible \\
+                13 & 6 & $x_1 \geqslant 1$ & 107.6364 & (1,1,0.4545,0,1,1) & Branched & - \\
+                14 & 7 & $x_6 \leqslant 0$ & 102.7143 & (0.1429,1,1,1,0,0) & Fathomed & $z<z_{ip}$(IP12) \\
+                15 & 7 & $x_6 \geqslant 1$ & 108.3333 & (0,0.8333,0,1,1,1) & Branched & - \\
+                16 & 9 & $x_4 \leqslant 0$ & 83 & (1,1,0,0,0,1) & Fathomed & Integral Feasible \\
+                17 & 9 & $x_4 \geqslant 1$ & 107.0769 & (1,1,0,1,0,0.6923) & Branched & - \\
+                18 & 10 & $x_1 \leqslant 0$ & 94 & (0,1,1,0,0,1) & Fathomed & Integral Feasible \\
+                19 & 10 & $x_1 \geqslant 1$ & 106.5385 & (1,1,0,0,0,0.8462) & Branched & - \\
+                20 & 11 & $x_6 \leqslant 0$ & 102.5714 & (0.7143,1,1,1,0,0) & Fathomed & $z<z_{ip}$(IP12) \\
+                21 & 11 & $x_6 \geqslant 1$ & - & - & Branched & Infeasible \\
+                22 & 13 & $x_3 \leqslant 0$ & 94 & (1,1,0,0,1,1) & Fathomed & Integral Feasible \\
+                23 & 13 & $x_3 \geqslant 1$ & 104.6154 & (1,1,1,0,1,0.5385) & Fathomed & $z<z_{ip}$(IP12) \\
+                24 & 15 & $x_2 \leqslant 0$ & 103.6364 & (0,0,0.4545,1,1,1) & Fathomed & $z<z_{ip}$(IP12) \\
+                25 & 15 & $x_2 \geqslant 1$ & - & - & Fathomed & Infeasible \\
+                26 & 17 & $x_6 \leqslant 0$ & 78 & (1,1,0,1,0,0) & Fathomed & Integral Feasible \\
+                27 & 17 & $x_6 \geqslant 1$ & 105.3333 & (1,0.3333,0,1,0,1) & Branched & - \\
+                28 & 19 & $x_6 \leqslant 0$ & 71 & (1,1,1,0,0,0) & Fathomed & Integral Feasible \\
+                29 & 19 & $x_6 \geqslant 1$ & 105.6667 & (1,0.6667,1,0,0,1) & Branched & - \\
+                30 & 27 & $x_2 \leqslant 0$ & 98 & (1,0,0,1,0,1) & Fathomed & Integral Feasible \\
+                31 & 27 & $x_2 \geqslant 1$ & - & - & Fathomed & Infeasible \\
+                32 & 29 & $x_2 \leqslant 0$ & 91 & (1,0,1,0,0,1) & Fathomed & Integral Feasible \\
+                33 & 29 & $x_2 \geqslant 1$ & - & - & Fathomed & Infeasible
+            \end{longtable}
+        \end{center}
+
+        (c) By looking at the table, we can conclude that the branch and bound method is very effective for this problem since if one subproblem is infeasible, then all the subproblems that are branched from it are also infeasible so a lot of works are reduced.\par
+        However, a brute force search would be much less efficient, as in this case it need to check all possible solutions with one thing has two possibles, that is, $2^6=64$ solutions for checking, which would be computationally expensive for larger problems.\par
+    \end{solution}
+\end{document}
